@@ -1,0 +1,1 @@
+../../../../../node_modules/react-native-ecc/ios/RNECC.h

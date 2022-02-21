@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "FCEF2B55-2879-472B-8E98-5BD50C96E0E7",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:AwesomeTSProject.xcodeproj",
+      "identifier" : "13B07F861A680F5B00A75B9A",
+      "name" : "AwesomeTSProject"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:AwesomeTSProject.xcodeproj",
+        "identifier" : "00E356ED1AD99517003FC87E",
+        "name" : "AwesomeTSProjectTests"
+      }
+    }
+  ],
+  "version" : 1
+}

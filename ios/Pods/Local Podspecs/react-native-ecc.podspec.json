@@ -1,0 +1,21 @@
+{
+  "name": "react-native-ecc",
+  "version": "2.3.1",
+  "summary": "basic elliptic curve crypto for React Native",
+  "license": "MIT",
+  "authors": "Mark Vayngrib <mark.vayngrib@lablz.com> (http://github.com/mvayngrib)",
+  "homepage": "https://github.com/tradle/react-native-ecc",
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source": {
+    "git": "https://github.com/tradle/react-native-ecc.git",
+    "tag": "v2.3.1"
+  },
+  "source_files": "ios/**/*.{h,m}",
+  "dependencies": {
+    "React": [
+
+    ]
+  }
+}
