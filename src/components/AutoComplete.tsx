@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { TextInput, StyleSheet, View, Text, Dimensions, Button } from 'react-native';
 import { followListInfoQuery, follow } from '@/utils/query';
-import { isValidAddr, formatAddress } from '@/utils/helpers';
+import {
+  isValidAddr,
+  formatAddress,
+  // cyberconnect
+} from "@/utils/helpers";
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 // @ts-ignore
-import crypto from 'react-native-ecc'
-import Buffer from 'buffer'
-// import './shim.js';
-// import Crypto from 'crypto'
-// import { SigningKey } from 'ethers/lib/utils';
-// @ts-ignore
-// import { useWeb3 } from '@/context/web3Context';
+// import * as ECcrypto from 'react-native-ecc';
+import Buffer from "buffer";
+import { hexlify } from "@ethersproject/bytes";
+import { toUtf8Bytes } from "@ethersproject/strings";
+import CyberConnect from "../cyberconnect";
 
 const AutoComplete: React.FC<{address: string}> = ({address}) => {
   const [focus, setFocus] = useState<boolean>(false);
@@ -19,39 +21,14 @@ const AutoComplete: React.FC<{address: string}> = ({address}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [signKey, setSignKey] = useState<string>('');
 
-  // const {cyberConnect} = useWeb3();
-
-  const msg = Buffer.Buffer.from('hey ho');
   const connector = useWalletConnect();
+
   useEffect(() => {
-    if (crypto.getServiceID()) {
-      crypto.keyPair('p256', (err: any, key: any) => {
-        key.sign(
-          {
-            data: msg,
-            algorithm: 'sha256',
-          },
-          function (err: any, sig: any) {
-            // signatures tested for compatibility with npm library "elliptic"
-            // console.log('sig', sig.toString('hex'));
-            setSignKey(sig.toString('hex'));
-            key.verify(
-              {
-                algorithm: 'sha256',
-                data: msg,
-                sig: sig,
-              },
-              function (err: any, verified: any) {
-                // console.log('verified:', verified);
-              },
-            );
-          },
-        );
-      });
-    } else {
-      crypto.setServiceID('be.excellent.to.each.other');
-    }
-  }, [crypto?.getServiceID()]);
+    // const cyberconnect = new CyberConnect({
+    //   provider: connector,
+    //   namespace: "CyberConnect",
+    // });
+  }, [])
 
   const autoCompleteUser = (value: any) => {
     setIptAddress(value.nativeEvent.text);
@@ -61,20 +38,60 @@ const AutoComplete: React.FC<{address: string}> = ({address}) => {
   };
 
   const handleFollow = () => {
-    follow({
-      fromAddr: address,
-      toAddr: iptAddress,
-      namespace: 'CyberConnect',
-      // url,
-      // signature,
-      // operation,
-      signingKey: signKey,
-      network: 'ETH',
-    } as any).then(res => {
-      console.log(res);
-    }).catch((err) => {
-      console.log(err)
-    });
+    // new CyberConnect({
+    //   provider: connector,
+    //   namespace: "CyberConnect",
+    //   clientType: 'RN'
+    // }).connect(iptAddress)
+    // if (ECcrypto.getServiceID()) {
+    //   ECcrypto.keyPair("p256", (err: any, key: any) => {
+    //     // @ts-ignore
+    //     // console.log(window.crypto.subtle.exportKey("spki", key.pub));
+    //     const message = `signing key: ${address}`;
+    //     key.sign(
+    //       {
+    //         data: message,
+    //         algorithm: "sha256",
+    //       },
+    //       (err: any, sig: any) => {
+    //         // signatures tested for compatibility with npm library "elliptic"
+    //         // global.Object.assign(globalSign, { signKey: sig.toString("hex") });
+    //         connector.signPersonalMessage([hexlify(toUtf8Bytes(message)), address]).then((res) => {
+    //           console.log(res)
+    //         })
+    //         key.verify(
+    //           {
+    //             algorithm: "sha256",
+    //             data: message,
+    //             sig: sig,
+    //           },
+    //           (err: any, verified: any) => {
+    //             // console.log('verified:', verified);
+    //           }
+    //         );
+    //       }
+    //     );
+    //   });
+    // } else {
+    //   ECcrypto.setServiceID("cyberconnect.excellent.to.each.other");
+    // }
+    // connector.signPersonalMessage([signKey])
+    // follow({
+    //   fromAddr: address,
+    //   toAddr: iptAddress,
+    //   namespace: "CyberConnect",
+    //   url: "https://api.stg.cybertino.io/connect/",
+    //   // signature: "",
+    //   // operation: "connect",
+    //   signingKey: signKey,
+    //   network: "ETH",
+    // } as any)
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   return (

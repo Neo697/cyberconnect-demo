@@ -36,77 +36,79 @@ import WalletConnectProvider from '@walletconnect/react-native-dapp';
 import Home from '@/pages/Home';
 import Follow from '@/pages/Follow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PolyfillCrypto from "react-native-webview-crypto";
+// import './global'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const Section: React.FC<{
-  title: string;
-}> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+// const Section: React.FC<{
+//   title: string;
+// }> = ({children, title}) => {
+//   const isDarkMode = useColorScheme() === 'dark';
+//   return (
+//     <View style={styles.sectionContainer}>
+//       <Text
+//         style={[
+//           styles.sectionTitle,
+//           {
+//             color: isDarkMode ? Colors.white : Colors.black,
+//           },
+//         ]}>
+//         {title}
+//       </Text>
+//       <Text
+//         style={[
+//           styles.sectionDescription,
+//           {
+//             color: isDarkMode ? Colors.light : Colors.dark,
+//           },
+//         ]}>
+//         {children}
+//       </Text>
+//     </View>
+//   );
+// };
+
+// const App = () => {
+//   const isDarkMode = useColorScheme() === 'dark';
+
+//   const backgroundStyle = {
+//     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+//   };
+
+//   return (
+//     <SafeAreaView style={backgroundStyle}>
+//       <StatusBar barStyle={'dark-content'} />
+//       <ScrollView
+//         contentInsetAdjustmentBehavior="automatic"
+//         style={backgroundStyle}>
+//         <Header />
+//         <View
+//           style={{
+//             backgroundColor: isDarkMode ? Colors.black : Colors.white,
+//           }}>
+//           <Section title="Step One">
+//             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
+//             screen and then come back to see your edits.
+//           </Section>
+//           <Section title="See Your Changes">
+//             <ReloadInstructions />
+//           </Section>
+//           <Section title="Debug">
+//             <DebugInstructions />
+//           </Section>
+//           <Section title="Learn More">
+//             Read the docs to discover what to do next:
+//           </Section>
+//           <LearnMoreLinks />
+//         </View>
+//       </ScrollView>
+//     </SafeAreaView>
+//   );
+// };
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
-const StarterApp = () => {
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -120,30 +122,34 @@ const StarterApp = () => {
         asyncStorage: AsyncStorage as any,
       }}
       bridge="https://bridge.walletconnect.org"
-      redirectUrl={'yourappscheme://'}
+      redirectUrl={"yourappscheme://"}
       // redirectUrl: Platform.OS === "web" ? window.location.origin : "yourappscheme://",
       clientMeta={{
-        description: 'Connect with WalletConnect',
-        url: 'https://walletconnect.org',
-        icons: ['https://walletconnect.org/walletconnect-logo.png'],
-        name: 'WalletConnect',
-      }}>
+        description: "Connect with WalletConnect",
+        url: "https://walletconnect.org",
+        icons: ["https://walletconnect.org/walletconnect-logo.png"],
+        name: "WalletConnect",
+      }}
+    >
       <NavigationContainer>
+        <PolyfillCrypto />
         {/* <SafeAreaView
           style={{...backgroundStyle, height: Dimensions.get('window').height}}>
           <View style={styles.container}> */}
-            <StatusBar barStyle={'dark-content'} />
-            {/* <View> */}
-              <Stack.Navigator
-                screenOptions={{
-                  header: () => {return null}
-                }}
-              >
-                <Stack.Screen name="Home" component={Home}></Stack.Screen>
-                <Stack.Screen name="Follow" component={Follow}></Stack.Screen>
-              </Stack.Navigator>
-            {/* </View> */}
-          {/* </View>
+        <StatusBar barStyle={"dark-content"} />
+        {/* <View> */}
+        <Stack.Navigator
+          screenOptions={{
+            header: () => {
+              return null;
+            },
+          }}
+        >
+          <Stack.Screen name="Home" component={Home}></Stack.Screen>
+          <Stack.Screen name="Follow" component={Follow}></Stack.Screen>
+        </Stack.Navigator>
+        {/* </View> */}
+        {/* </View>
         </SafeAreaView> */}
       </NavigationContainer>
     </WalletConnectProvider>
@@ -179,4 +185,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StarterApp;
+export default App;

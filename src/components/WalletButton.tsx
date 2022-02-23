@@ -7,7 +7,7 @@ import {
 const WalletButton: React.FC<any> = ({ navigation }) => {
 
   const connector = useWalletConnect();
-  console.log(connector.connected)
+  // console.log(connector.connected)
 
   useEffect(() => {
     if (connector.connected) {

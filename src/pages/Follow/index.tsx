@@ -13,7 +13,7 @@ import {
 // @ts-ignore
 import Avatar from 'react-native-boring-avatars';
 import {SvgXml} from 'react-native-svg';
-import {arrowDown} from '/Users/domingo/AwesomeTSProject/src/svg/icon';
+import { arrowDown } from '@/svg/icon';
 import MyText from '@/components/MyText';
 import AvatarGroup from "@/components/AvatarGroup";
 import AutoComplete from '@/components/AutoComplete';
@@ -29,7 +29,6 @@ const Follow: React.FC<any> = ({route, navigation}) => {
   const [followers, setFollowers] = useState<any[]>([]);
   const [followings, setFollowings] = useState<any[]>([]);
   const [flag, setFlag] = useState<boolean>(false);
-
   useEffect(() => {
     if (visible) {
       followListInfoQuery({
