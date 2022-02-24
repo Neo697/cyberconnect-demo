@@ -3,12 +3,10 @@ import { View, Text, Button, StyleSheet } from "react-native";
 import { useWalletConnect } from "@walletconnect/react-native-dapp";
 const WalletButton: React.FC<any> = ({ navigation }) => {
   const connector = useWalletConnect();
-  // console.log(connector.connected)
 
   const handleConnect = () => {
     connector.connect().then((res) => {
       connector.off("connect");
-      // console.log(connector);
       if (res?.accounts?.length && res?.accounts[0]) {
         navigation.navigate("Follow", {
           address: res.accounts[0],

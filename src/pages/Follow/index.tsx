@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -7,23 +7,22 @@ import {
   StyleSheet,
   TextInput,
   Dimensions,
-  Animated
-} from 'react-native';
+  Animated,
+} from "react-native";
 // import {Avatar} from 'react-native-paper';
 // @ts-ignore
-import Avatar from 'react-native-boring-avatars';
-import {SvgXml} from 'react-native-svg';
-import { arrowDown } from '@/svg/icon';
-import MyText from '@/components/MyText';
+import Avatar from "react-native-boring-avatars";
+import { SvgXml } from "react-native-svg";
+import { arrowDown } from "@/svg/icon";
+import MyText from "@/components/MyText";
 import AvatarGroup from "@/components/AvatarGroup";
-import AutoComplete from '@/components/AutoComplete';
-import { followListInfoQuery } from '@/utils/query';
-import { formatAddress } from '@/utils/helpers'
-import useColorTheme from '@/utils/useColorTheme';
+import AutoComplete from "@/components/AutoComplete";
+import { followListInfoQuery } from "@/utils/query";
+import { formatAddress } from "@/utils/helpers";
+import useColorTheme from "@/utils/useColorTheme";
 
-const Follow: React.FC<any> = ({route, navigation}) => {
-
-  const { address } = route.params
+const Follow: React.FC<any> = ({ route, navigation }) => {
+  const { address } = route.params;
   const showAnimated = useRef(new Animated.Value(0)).current;
   const [visible, setVisible] = useState<boolean>(false);
   const [followers, setFollowers] = useState<any[]>([]);
@@ -35,19 +34,18 @@ const Follow: React.FC<any> = ({route, navigation}) => {
     if (visible) {
       followListInfoQuery({
         address,
-        namespace: 'CyberConnect',
-        network: 'ETH',
+        namespace: "CyberConnect",
+        network: "ETH",
         followingFirst: 10,
         followerFirst: 10,
       }).then((res) => {
-        console.log(res)
-        setFollowersNum(res.followerCount)
+        setFollowersNum(res.followerCount);
         setFollowingsNum(res.followingCount);
-        setFollowers(res.followers.list)
-        setFollowings(res.followings.list)
-      })
+        setFollowers(res.followers.list);
+        setFollowings(res.followings.list);
+      });
     }
-  }, [visible])
+  }, [visible]);
 
   const onShow = () => {
     Animated.timing(showAnimated, {
@@ -55,7 +53,7 @@ const Follow: React.FC<any> = ({route, navigation}) => {
       duration: 500,
       useNativeDriver: true,
     }).start();
-    setVisible(true)
+    setVisible(true);
   };
 
   const onClose = () => {
@@ -64,16 +62,16 @@ const Follow: React.FC<any> = ({route, navigation}) => {
       duration: 500,
       useNativeDriver: true,
     }).start();
-    setVisible(false)
-  }
+    setVisible(false);
+  };
 
   const leftOrRight = () => {
     if (flag) {
-      return {right: 0}
+      return { right: 0 };
     } else {
-      return {left: 0};
+      return { left: 0 };
     }
-  }
+  };
 
   return (
     <>
@@ -196,98 +194,98 @@ const Follow: React.FC<any> = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   followPage: {
-    width: Dimensions.get('window').width,
+    width: Dimensions.get("window").width,
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    backgroundColor: '#000',
+    flexDirection: "column",
+    justifyContent: "space-between",
+    backgroundColor: "#000",
   },
   searchContent: {
     flex: 0.5,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    flexDirection: "column",
+    justifyContent: "space-between",
+    backgroundColor: "#fff",
     paddingTop: 45,
     paddingBottom: 20,
     paddingHorizontal: 25,
   },
   followContent: {
-    height: Dimensions.get('window').height,
-    flexDirection: 'column',
-    backgroundColor: '#fff',
+    height: Dimensions.get("window").height,
+    flexDirection: "column",
+    backgroundColor: "#fff",
   },
   modal: {
-    backgroundColor: 'rgba(0, 0, 0, .6)',
-    position: 'absolute',
+    backgroundColor: "rgba(0, 0, 0, .6)",
+    position: "absolute",
     top: -50,
     zIndex: 1,
     flex: 1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
   followData: {
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     paddingHorizontal: 25,
     paddingVertical: 25,
-    position: 'absolute',
-    width: Dimensions.get('window').width,
+    position: "absolute",
+    width: Dimensions.get("window").width,
     bottom: 0,
     zIndex: 2,
   },
   followHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   navData: {
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     paddingTop: 30,
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   allNumber: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   followers: {
-    width: '50%',
-    flexDirection: 'column',
+    width: "50%",
+    flexDirection: "column",
   },
   following: {
-    width: '50%',
-    flexDirection: 'column',
+    width: "50%",
+    flexDirection: "column",
   },
   number: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 26,
-    fontWeight: '800',
+    fontWeight: "800",
     marginBottom: 10,
   },
   label: {
-    color: '#fff',
+    color: "#fff",
     opacity: 0.5,
     fontSize: 12,
-    fontWeight: '500',
-    textTransform: 'uppercase',
+    fontWeight: "500",
+    textTransform: "uppercase",
   },
   slideBorder: {
-    position: 'relative',
-    width: '100%',
-    flexDirection: 'row',
-    backgroundColor: 'rgba(255, 255, 255, .2)',
+    position: "relative",
+    width: "100%",
+    flexDirection: "row",
+    backgroundColor: "rgba(255, 255, 255, .2)",
     marginTop: 30,
   },
   slideWhite: {
-    position: 'absolute',
-    width: '50%',
+    position: "absolute",
+    width: "50%",
     height: 4,
-    flexDirection: 'row',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    backgroundColor: "#fff",
   },
   list: {
     paddingTop: 20,
   },
   avatarGroup: {
-    marginBottom: 15
-  }
+    marginBottom: 15,
+  },
 });
 
-export default Follow
+export default Follow;

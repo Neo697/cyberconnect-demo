@@ -41,7 +41,6 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
     //     }
     //   });
     // }
-    console.log(address);
     if (value.nativeEvent.text === address) {
       setIsSelf(true);
     } else {
@@ -50,8 +49,6 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
   };
 
   const handleFollow = () => {
-    console.log(cc);
-
     if (isFollowing) {
       cc?.disconnect(iptAddress).then(() => {
         setIsFollowing(false);
