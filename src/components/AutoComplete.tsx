@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  TextInput,
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-  Button,
-} from "react-native";
-import {
-  followListInfoQuery,
-  follow,
-  searchUserInfoQuery,
-} from "@/utils/query";
+import { TextInput, StyleSheet, View, Text } from "react-native";
+import { searchUserInfoQuery } from "@/utils/query";
 import {
   isValidAddr,
   formatAddress,
@@ -20,16 +9,15 @@ import {
 import { useWalletConnect } from "@walletconnect/react-native-dapp";
 // @ts-ignore
 // import * as ECcrypto from 'react-native-ecc';
+import useCC from "@/utils/useCyberConnect";
 
 const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
   const [focus, setFocus] = useState<boolean>(false);
   const [iptAddress, setIptAddress] = useState<string>("");
   const [isSelf, setIsSelf] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [cyberNative, setCyberNative] = useState<any>(null);
-
-  const connector = useWalletConnect();
+  const { cc } = useCC();
 
   useEffect(() => {
     if (address && iptAddress) {
@@ -56,29 +44,15 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
   };
 
   const handleFollow = () => {
-    // cyberconnect.then(CyberConnect => {
-    //   // console.log(new CyberConnect.default)
-    //   new CyberConnect({
-    //     provider: connector,
-    //     namespace: 'CyberConnect',
-    //     clientType: 'RN'
-    //   }).connect(address)
-    // })
     console.log(cyberNative);
     if (isFollowing) {
-      cyberNative?.disconnect(iptAddress).then(() => {
+      cc?.disconnect(iptAddress).then(() => {
         setIsFollowing(false);
       });
-      // disconnect(connector, address, iptAddress).then((res) => {
-      //   setIsFollowing(false);
-      // });
     } else {
-      cyberNative?.connect(iptAddress).then(() => {
+      cc?.connect(iptAddress).then(() => {
         setIsFollowing(true);
       });
-      // connect(connector, address, iptAddress).then((res) => {
-      //   setIsFollowing(true);
-      // })
     }
   };
 
