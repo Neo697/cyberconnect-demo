@@ -26,24 +26,14 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
         namespace: "CyberConnect",
         network: "ETH",
       }).then((res) => {
-        console.log(res?.followStatus?.isFollowed, "isFollowing");
-        setIsFollowing(res?.followStatus?.isFollowed);
+        console.log(res?.followStatus?.isFollowing, "isFollowing");
+        setIsFollowing(res?.followStatus?.isFollowing);
       });
     }
   }, [address, iptAddress]);
 
   const autoCompleteUser = (value: any) => {
     setIptAddress(value.nativeEvent.text);
-    // if (followings?.length) {
-    //   followings.forEach((item) => {
-    //     if (item.address === value.nativeEvent.text) {
-    //       setIsFollowing(true);
-    //     } else {
-    //       setIsFollowing(false);
-    //     }
-    //   });
-    // }
-    console.log(address);
     if (value.nativeEvent.text === address) {
       setIsSelf(true);
     } else {
