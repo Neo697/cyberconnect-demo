@@ -11,6 +11,8 @@
     "postinstall": "rn-nodeify --install buffer,crypto,stream,util,process,vm --hack"
   },
   "dependencies": {
+    "@ceramicnetwork/http-client": "^1.5.7",
+    "@ceramicstudio/idx": "^0.12.2",
     "@cyberlab/cyberconnect": "^4.2.2",
     "@react-native-async-storage/async-storage": "^1.16.1",
     "@react-navigation/bottom-tabs": "^6.2.0",
@@ -40,10 +42,10 @@
     "react-native": "0.67.2",
     "react-native-boring-avatars": "^1.0.1",
     "react-native-crypto": "^2.2.0",
-    "react-native-ecc": "^2.3.1",
     "react-native-get-random-values": "^1.7.2",
     "react-native-level-fs": "^3.0.1",
     "react-native-os": "^1.2.6",
+    "react-native-polyfill-globals": "^3.1.0",
     "react-native-randombytes": "^3.6.1",
     "react-native-reanimated": "^2.4.1",
     "react-native-safe-area-context": "^3.4.0",
@@ -59,9 +61,7 @@
     "timers-browserify": "^1.4.2",
     "tty-browserify": "^0.0.0",
     "url": "^0.10.3",
-    "vm-browserify": "^0.0.4",
-    "web3": "^1.7.0",
-    "web3modal": "^1.9.5"
+    "vm-browserify": "^0.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -99,7 +99,6 @@
     "zlib": "browserify-zlib",
     "console": "console-browserify",
     "constants": "constants-browserify",
-    "crypto": "react-native-crypto",
     "dns": "dns.js",
     "net": "react-native-tcp",
     "domain": "domain-browser",
@@ -119,13 +118,13 @@
     "timers": "timers-browserify",
     "tty": "tty-browserify",
     "vm": "vm-browserify",
-    "tls": false
+    "tls": false,
+    "crypto": "react-native-crypto"
   },
   "browser": {
     "zlib": "browserify-zlib",
     "console": "console-browserify",
     "constants": "constants-browserify",
-    "crypto": "react-native-crypto",
     "dns": "dns.js",
     "net": "react-native-tcp",
     "domain": "domain-browser",
@@ -145,6 +144,7 @@
     "timers": "timers-browserify",
     "tty": "tty-browserify",
     "vm": "vm-browserify",
-    "tls": false
+    "tls": false,
+    "crypto": "react-native-crypto"
   }
 }

@@ -37,7 +37,8 @@ import Home from '@/pages/Home';
 import Follow from '@/pages/Follow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PolyfillCrypto from "react-native-webview-crypto";
-// import './global'
+// @ts-ignore
+import './global'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

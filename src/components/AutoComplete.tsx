@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { TextInput, StyleSheet, View, Text, Dimensions, Button } from 'react-native';
-import { followListInfoQuery, follow } from '@/utils/query';
+import {
+  followListInfoQuery,
+  follow,
+  searchUserInfoQuery,
+} from "@/utils/query";
 import {
   isValidAddr,
   formatAddress,
@@ -12,86 +16,81 @@ import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import Buffer from "buffer";
 import { hexlify } from "@ethersproject/bytes";
 import { toUtf8Bytes } from "@ethersproject/strings";
-import CyberConnect from "../cyberconnect";
+// import CyberConnect from '../cyberconnect';
+const cyberconnect = import("../cyberconnect");
+import { connect, disconnect } from "@/utils/connect";
 
 const AutoComplete: React.FC<{address: string}> = ({address}) => {
   const [focus, setFocus] = useState<boolean>(false);
   const [iptAddress, setIptAddress] = useState<string>('');
   const [isSelf, setIsSelf] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [signKey, setSignKey] = useState<string>('');
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [cyberNative, setCyberNative] = useState<any>(null)
 
   const connector = useWalletConnect();
 
   useEffect(() => {
-    // const cyberconnect = new CyberConnect({
-    //   provider: connector,
-    //   namespace: "CyberConnect",
-    // });
+    cyberconnect.then(res => {
+      const CyberConnect = res.default
+      const CyberRN = new CyberConnect({
+        provider: connector,
+        namespace: 'CyberConnect',
+        clientType: 'RN' as any
+      })
+      setCyberNative(CyberRN);
+    }) 
   }, [])
+
+  useEffect(() => {
+    if (address && iptAddress) {
+      searchUserInfoQuery({
+        fromAddr: address,
+        toAddr: iptAddress,
+        namespace: 'CyberConnect',
+        network: 'ETH'
+      }).then((res) => {
+        console.log(res?.followStatus?.isFollowed, 'isFollowing');
+        setIsFollowing(res?.followStatus?.isFollowed)
+      })
+    }
+  }, [address, iptAddress])
 
   const autoCompleteUser = (value: any) => {
     setIptAddress(value.nativeEvent.text);
+    console.log(address)
     if (value.nativeEvent.text === address) {
       setIsSelf(true);
+    } else {
+      setIsSelf(false);
     }
   };
 
   const handleFollow = () => {
-    // new CyberConnect({
-    //   provider: connector,
-    //   namespace: "CyberConnect",
-    //   clientType: 'RN'
-    // }).connect(iptAddress)
-    // if (ECcrypto.getServiceID()) {
-    //   ECcrypto.keyPair("p256", (err: any, key: any) => {
-    //     // @ts-ignore
-    //     // console.log(window.crypto.subtle.exportKey("spki", key.pub));
-    //     const message = `signing key: ${address}`;
-    //     key.sign(
-    //       {
-    //         data: message,
-    //         algorithm: "sha256",
-    //       },
-    //       (err: any, sig: any) => {
-    //         // signatures tested for compatibility with npm library "elliptic"
-    //         // global.Object.assign(globalSign, { signKey: sig.toString("hex") });
-    //         connector.signPersonalMessage([hexlify(toUtf8Bytes(message)), address]).then((res) => {
-    //           console.log(res)
-    //         })
-    //         key.verify(
-    //           {
-    //             algorithm: "sha256",
-    //             data: message,
-    //             sig: sig,
-    //           },
-    //           (err: any, verified: any) => {
-    //             // console.log('verified:', verified);
-    //           }
-    //         );
-    //       }
-    //     );
-    //   });
-    // } else {
-    //   ECcrypto.setServiceID("cyberconnect.excellent.to.each.other");
-    // }
-    // connector.signPersonalMessage([signKey])
-    // follow({
-    //   fromAddr: address,
-    //   toAddr: iptAddress,
-    //   namespace: "CyberConnect",
-    //   url: "https://api.stg.cybertino.io/connect/",
-    //   // signature: "",
-    //   // operation: "connect",
-    //   signingKey: signKey,
-    //   network: "ETH",
-    // } as any)
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    // cyberconnect.then(CyberConnect => {
+    //   // console.log(new CyberConnect.default)
+    //   new CyberConnect({
+    //     provider: connector,
+    //     namespace: 'CyberConnect',
+    //     clientType: 'RN'
+    //   }).connect(address)
+    // })
+    console.log(cyberNative);
+    if (isFollowing) {
+      cyberNative?.disconnect(iptAddress).then(() => {
+        setIsFollowing(false)
+      })
+      // disconnect(connector, address, iptAddress).then((res) => {
+      //   setIsFollowing(false);
+      // });
+    } else {
+      cyberNative?.connect(iptAddress).then(() => {
+        setIsFollowing(true);
+      });
+      // connect(connector, address, iptAddress).then((res) => {
+      //   setIsFollowing(true);
+      // })
+    }
   };
 
   return (
@@ -101,12 +100,12 @@ const AutoComplete: React.FC<{address: string}> = ({address}) => {
           ...styles.selectAddress,
           borderBottomColor:
             (iptAddress && !isValidAddr(iptAddress)) || (iptAddress && isSelf)
-              ? '#f00'
-              : '#000',
+              ? "#f00"
+              : "#000",
         }}
         placeholder="INPUT ADDRESS TO FOLLOW"
-        selectionColor={'#000'}
-        placeholderTextColor={focus ? '#ccc' : 'rgba(0, 0, 0, 0.1)'}
+        selectionColor={"#000"}
+        placeholderTextColor={focus ? "#ccc" : "rgba(0, 0, 0, 0.1)"}
         autoFocus={focus}
         onFocus={() => setFocus(true)}
         onChange={autoCompleteUser}
@@ -116,26 +115,26 @@ const AutoComplete: React.FC<{address: string}> = ({address}) => {
           ...styles.warn,
           color:
             (iptAddress && !isValidAddr(iptAddress)) || (iptAddress && isSelf)
-              ? '#f00'
-              : '#000',
-        }}>
+              ? "#f00"
+              : "#000",
+        }}
+      >
         {iptAddress && !isValidAddr(iptAddress)
-          ? 'Please enter a valid address.'
+          ? "Please enter a valid address."
           : iptAddress && isSelf
-          ? 'You can’t follow yourself'
-          : ''}
+          ? "You can’t follow yourself"
+          : ""}
       </Text>
       <View
         style={{
           ...styles.selectView,
           display:
-            iptAddress && isValidAddr(iptAddress) && !isSelf
-              ? 'flex'
-              : 'none',
-        }}>
+            iptAddress && isValidAddr(iptAddress) && !isSelf ? "flex" : "none",
+        }}
+      >
         <Text style={styles.address}>{formatAddress(iptAddress)}</Text>
         <Text style={styles.followBtn} onPress={handleFollow}>
-          +FOLLOW
+          {isFollowing ? "-UNFOLLOW" : "+FOLLOW"}
         </Text>
       </View>
     </View>

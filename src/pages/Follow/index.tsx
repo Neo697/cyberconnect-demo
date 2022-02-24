@@ -165,6 +165,7 @@ const Follow: React.FC<any> = ({route, navigation}) => {
                           <AvatarGroup
                             size={35}
                             name={user.ens}
+                            address={user.address}
                             nameStyle={{fontSize: 13, fontWeight: '500'}}
                           />
                         </View>

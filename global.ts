@@ -45,5 +45,5 @@ if (!global.navigator || !global.navigator.userAgent) {
 }
 
 if (!global.TextDecoder) {
-  global.TextDecoder = encoding;
+  global.TextDecoder = encoding.TextDecoder;
 }
