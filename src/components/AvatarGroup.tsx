@@ -8,7 +8,7 @@ import { formatAddress } from '@/utils/helpers'
 interface AvatarProps {
   size: number;
   name: string;
-  address: string;
+  address?: string;
   nameStyle?: any;
   navigation?: any;
 }

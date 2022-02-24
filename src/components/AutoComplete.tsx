@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { TextInput, StyleSheet, View, Text } from "react-native";
 import { searchUserInfoQuery } from "@/utils/query";
+
 import {
   isValidAddr,
   formatAddress,
   // cyberconnect
 } from "@/utils/helpers";
-import { useWalletConnect } from "@walletconnect/react-native-dapp";
-// @ts-ignore
-// import * as ECcrypto from 'react-native-ecc';
+
 import useCC from "@/utils/useCyberConnect";
 
 const AutoComplete: React.FC<{ address: string }> = ({ address }) => {

@@ -1,19 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { useWalletConnect } from "@walletconnect/react-native-dapp";
-
 const WalletButton: React.FC<any> = ({ navigation }) => {
   const connector = useWalletConnect();
   // console.log(connector.connected)
-
-  useEffect(() => {
-    if (connector.connected) {
-      // connector.off('connect')
-      // navigation.navigate('Follow', {
-      //   address: connector.accounts[0],
-      // });
-    }
-  }, [connector.connected]);
 
   const handleConnect = () => {
     connector.connect().then((res) => {
