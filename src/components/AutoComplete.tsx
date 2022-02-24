@@ -15,7 +15,6 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
   const [iptAddress, setIptAddress] = useState<string>("");
   const [isSelf, setIsSelf] = useState<boolean>(false);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
-  const [cyberNative, setCyberNative] = useState<any>(null);
   const { cc } = useCC();
 
   useEffect(() => {
