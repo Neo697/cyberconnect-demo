@@ -4,9 +4,9 @@ import {
   FollowListInfoResp,
   SearchUserInfoResp,
   UpdateConnectionInput,
-} from './types';
+} from "./types";
 
-const endPoint = 'https://api.cybertino.io/connect/';
+const endPoint = "https://api.stg.cybertino.io/connect/";
 
 export const followListInfoSchema = ({
   address,
@@ -18,7 +18,7 @@ export const followListInfoSchema = ({
   followerAfter,
 }: FollowListInfoArgs) => {
   return {
-    operationName: 'followListInfo',
+    operationName: "followListInfo",
     query: `query followListInfo($address: String!, $namespace: String, $network: Network, $followingFirst: Int, $followingAfter: String, $followerFirst: Int, $followerAfter: String) {
       identity(address: $address, network: $network) {
         followingCount(namespace: $namespace)
@@ -66,7 +66,7 @@ export const searchUserInfoSchema = ({
   network,
 }: SearchUserInfoArgs) => {
   return {
-    operationName: 'searchUserInfo',
+    operationName: "searchUserInfo",
     query: `query searchUserInfo($fromAddr: String!, $toAddr: String!, $namespace: String, $network: Network) {
       identity(address: $toAddr, network: $network) {
         address
@@ -89,7 +89,7 @@ export const searchUserInfoSchema = ({
 
 export const connectQuerySchema = (input: UpdateConnectionInput) => {
   return {
-    operationName: 'connect',
+    operationName: "connect",
     query: `mutation connect($input: UpdateConnectionInput!) {connect(input: $input) {result}}`,
     variables: {
       input,
@@ -103,17 +103,17 @@ export const querySchemas = {
   connect: connectQuerySchema,
 };
 
-export const request = async (url = '', data = {}) => {
+export const request = async (url = "", data = {}) => {
   // Default options are marked with *
   const response = await fetch(url, {
-    method: 'POST',
-    mode: 'cors',
+    method: "POST",
+    mode: "cors",
     // @ts-ignore
-    cache: 'no-cache',
+    cache: "no-cache",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    referrerPolicy: 'no-referrer',
+    referrerPolicy: "no-referrer",
     body: JSON.stringify(data),
   });
 
@@ -126,7 +126,7 @@ export const handleQuery = (
     variables: object;
     operationName: string;
   },
-  url: string,
+  url: string
 ) => {
   return request(url, data);
 };
@@ -152,7 +152,7 @@ export const follow = ({
   signingKey: string;
   network: string;
 }) => {
-  const schema = querySchemas['connect']({
+  const schema = querySchemas["connect"]({
     fromAddr,
     toAddr,
     alias,
@@ -174,7 +174,7 @@ export const followListInfoQuery = async ({
   followerFirst,
   followerAfter,
 }: FollowListInfoArgs) => {
-  const schema = querySchemas['followListInfo']({
+  const schema = querySchemas["followListInfo"]({
     address,
     namespace,
     network,
@@ -194,7 +194,7 @@ export const searchUserInfoQuery = async ({
   namespace,
   network,
 }: SearchUserInfoArgs) => {
-  const schema = querySchemas['searchUserInfo']({
+  const schema = querySchemas["searchUserInfo"]({
     fromAddr,
     toAddr,
     namespace,
