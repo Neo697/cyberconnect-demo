@@ -5,13 +5,12 @@ import Buffer from "buffer";
 import { useWalletConnect } from "@walletconnect/react-native-dapp";
 import { hexlify } from "@ethersproject/bytes";
 import { toUtf8Bytes } from "@ethersproject/strings";
-import { set, get, clear } from "../cyberconnect/DB";
 
-const globalSign: any = {}
+const globalSign: any = {};
 
 export const formatAddress = (address: string) => {
   const len = address.length;
-  return address.substr(0, 5) + '...' + address.substring(len - 4, len);
+  return address.substr(0, 5) + "..." + address.substring(len - 4, len);
 };
 
 export const isValidAddr = (address: string) => {

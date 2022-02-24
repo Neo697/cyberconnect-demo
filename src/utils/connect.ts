@@ -1,10 +1,8 @@
 import { hexlify } from "@ethersproject/bytes";
 import { toUtf8Bytes } from "@ethersproject/strings";
-import { set, get, clear } from "../cyberconnect/DB";
-import encoding from 'text-encoding'
+import encoding from "text-encoding";
 import { IDX } from "@ceramicstudio/idx";
 import { CeramicClient } from "@ceramicnetwork/http-client";
-
 
 export const endpoints: { [key in Env]: Endpoint } = {
   STAGING: {
@@ -225,7 +223,7 @@ export const follow = ({
     signingKey,
     network,
   });
-  console.log(schema)
+  console.log(schema);
   return handleQuery(schema, url);
 };
 
@@ -439,24 +437,22 @@ export async function signWithSigningKey(input: string) {
 }
 
 const getOutboundLink = async () => {
-    // if (!idxInstance) {
-    //   throw new ConnectError(
-    //     ErrorCode.CeramicError,
-    //     "Could not find idx instance"
-    //   );
-    // }
+  // if (!idxInstance) {
+  //   throw new ConnectError(
+  //     ErrorCode.CeramicError,
+  //     "Could not find idx instance"
+  //   );
+  // }
 
-    try {
-      const result = (await idxInstance.get(
-        "cyberConnect"
-      )) as any;
+  try {
+    const result = (await idxInstance.get("cyberConnect")) as any;
 
-      return result?.outboundLink || [];
-    } catch (e) {
-      console.log('getOutboundLink is Error');
-      // throw new ConnectError(ErrorCode.CeramicError, e as string);
-    }
+    return result?.outboundLink || [];
+  } catch (e) {
+    console.log("getOutboundLink is Error");
+    // throw new ConnectError(ErrorCode.CeramicError, e as string);
   }
+};
 
 const idxInstance = new IDX({
   ceramic: ceramicClient,
@@ -478,7 +474,7 @@ const ceramicConnect = async (targetAddr: string, alias: string = "") => {
     // }
 
     const index = outboundLink.findIndex((link: any) => {
-      return link.target === targetAddr && link.namespace === 'CyberConnect';
+      return link.target === targetAddr && link.namespace === "CyberConnect";
     });
 
     const curTimeStr = String(Date.now());
@@ -487,7 +483,7 @@ const ceramicConnect = async (targetAddr: string, alias: string = "") => {
       outboundLink.push({
         target: targetAddr,
         connectionType: "follow",
-        namespace: 'CyberConnect',
+        namespace: "CyberConnect",
         alias,
         createdAt: curTimeStr,
       });
@@ -499,32 +495,37 @@ const ceramicConnect = async (targetAddr: string, alias: string = "") => {
   } catch (e) {
     console.error(e);
   }
-}
+};
 
 const ceramicDisconnect = async (targetAddr: string) => {
-    try {
-      const outboundLink = await getOutboundLink();
+  try {
+    const outboundLink = await getOutboundLink();
 
-      // if (!idxInstance) {
-      //   throw new ConnectError(
-      //     ErrorCode.CeramicError,
-      //     "Could not find idx instance"
-      //   );
-      // }
+    // if (!idxInstance) {
+    //   throw new ConnectError(
+    //     ErrorCode.CeramicError,
+    //     "Could not find idx instance"
+    //   );
+    // }
 
-      const newOutboundLink = outboundLink.filter((link: any) => {
-        return link.target !== targetAddr || link.namespace !== 'CyberConnect';
-      });
+    const newOutboundLink = outboundLink.filter((link: any) => {
+      return link.target !== targetAddr || link.namespace !== "CyberConnect";
+    });
 
-      idxInstance.set("cyberConnect", {
-        outboundLink: newOutboundLink,
-      });
-    } catch (e) {
-      console.error(e);
-    }
+    idxInstance.set("cyberConnect", {
+      outboundLink: newOutboundLink,
+    });
+  } catch (e) {
+    console.error(e);
   }
+};
 
-export const connect = async (provider: any, address: string, targetAddr: string, alias: string = "") => {
+export const connect = async (
+  provider: any,
+  address: string,
+  targetAddr: string,
+  alias: string = ""
+) => {
   try {
     const newaddress = await getAddress(provider, address);
 
@@ -538,7 +539,7 @@ export const connect = async (provider: any, address: string, targetAddr: string
       name: "follow",
       from: newaddress,
       to: targetAddr,
-      namespace: 'CyberConnect',
+      namespace: "CyberConnect",
       network: Blockchain.ETH,
       alias,
       timestamp: Date.now(),
@@ -553,12 +554,12 @@ export const connect = async (provider: any, address: string, targetAddr: string
       fromAddr: newaddress,
       toAddr: targetAddr,
       alias,
-      namespace: 'CyberConnect',
+      namespace: "CyberConnect",
       url: endpoint.cyberConnectApi,
       // signature,
       signingKey: publicKey,
       operation: JSON.stringify(operation),
-      network: 'ETH',
+      network: "ETH",
     };
 
     console.log(endpoint.cyberConnectApi);
@@ -566,7 +567,7 @@ export const connect = async (provider: any, address: string, targetAddr: string
     // const sign = await signWithJwt();
 
     const resp = await follow(params as any);
-    console.log(resp)
+    console.log(resp);
 
     if (resp?.data?.connect.result === "INVALID_SIGNATURE") {
       await clearSigningKey();
@@ -586,70 +587,75 @@ export const connect = async (provider: any, address: string, targetAddr: string
       // );
     }
   } catch (e: any) {
-    console.log('connect of Error')
+    console.log("connect of Error");
     // throw new ConnectError(ErrorCode.GraphqlError, e.message || e);
   }
   if (DFLAG) {
     ceramicConnect(targetAddr, alias);
   }
-}
+};
 
-export const disconnect = async (provider: any, address: string, targetAddr: string, alias: string = "") => {
-    try {
-      const newaddress = await getAddress(provider, address);
-      await authWithSigningKey(provider, address);
+export const disconnect = async (
+  provider: any,
+  address: string,
+  targetAddr: string,
+  alias: string = ""
+) => {
+  try {
+    const newaddress = await getAddress(provider, address);
+    await authWithSigningKey(provider, address);
 
-      const operation: any = {
-        name: "unfollow",
-        from: address,
-        to: targetAddr,
-        namespace: 'CyberConnect',
-        network: Blockchain.ETH,
-        alias,
-        timestamp: Date.now(),
-      };
+    const operation: any = {
+      name: "unfollow",
+      from: address,
+      to: targetAddr,
+      namespace: "CyberConnect",
+      network: Blockchain.ETH,
+      alias,
+      timestamp: Date.now(),
+    };
 
-      const signature = await signWithSigningKey(JSON.stringify(operation));
-      const publicKey = await getPublicKey();
+    const signature = await signWithSigningKey(JSON.stringify(operation));
+    const publicKey = await getPublicKey();
 
-      const params = {
-        fromAddr: address,
-        toAddr: targetAddr,
-        alias,
-        namespace: 'CyberConnect',
-        url: endpoint.cyberConnectApi,
-        // signature,
-        signingKey: publicKey,
-        operation: JSON.stringify(operation),
-        network: Blockchain.ETH,
-      };
+    const params = {
+      fromAddr: address,
+      toAddr: targetAddr,
+      alias,
+      namespace: "CyberConnect",
+      url: endpoint.cyberConnectApi,
+      // signature,
+      signingKey: publicKey,
+      operation: JSON.stringify(operation),
+      network: Blockchain.ETH,
+    };
 
-      // const sign = await signWithJwt();
+    // const sign = await signWithJwt();
 
-      const resp = await unfollow(params as any);
+    const resp = await unfollow(params as any);
 
-      if (resp?.data?.disconnect.result === "INVALID_SIGNATURE") {
-        await clearSigningKey();
-        console.log("INVALID_SIGNATURE");
+    if (resp?.data?.disconnect.result === "INVALID_SIGNATURE") {
+      await clearSigningKey();
+      console.log("INVALID_SIGNATURE");
 
-        // throw new ConnectError(
-        //   ErrorCode.GraphqlError,
-        //   resp?.data?.disconnect.result
-        // );
-      }
-
-      if (resp?.data?.disconnect.result !== "SUCCESS") {
-        console.log('unfollow is unsuccessed')
-        // throw new ConnectError(
-        //   ErrorCode.GraphqlError,
-        //   resp?.data?.disconnect.result
-        // );
-      }
-    } catch (e: any) {
-      console.log("disconnect of Error");
-      // throw new ConnectError(ErrorCode.GraphqlError, e.message || e);
+      // throw new ConnectError(
+      //   ErrorCode.GraphqlError,
+      //   resp?.data?.disconnect.result
+      // );
     }
-    if (DFLAG) {
-      ceramicDisconnect(targetAddr);
+
+    if (resp?.data?.disconnect.result !== "SUCCESS") {
+      console.log("unfollow is unsuccessed");
+      // throw new ConnectError(
+      //   ErrorCode.GraphqlError,
+      //   resp?.data?.disconnect.result
+      // );
     }
+  } catch (e: any) {
+    console.log("disconnect of Error");
+    // throw new ConnectError(ErrorCode.GraphqlError, e.message || e);
   }
+  if (DFLAG) {
+    ceramicDisconnect(targetAddr);
+  }
+};
