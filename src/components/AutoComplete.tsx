@@ -43,34 +43,17 @@ const AutoComplete: React.FC<{address: string}> = ({address}) => {
     }) 
   }, [])
 
-  useEffect(() => {
-    if (followings?.length) {
-      followings.forEach((item) => {
-        if (item.address === iptAddress) {
-          setIsFollowing(true)
-        } else {
-          setIsFollowing(false)
-        }
-      })
-    }
-  }, [followings?.length]);
-
-  // useEffect(() => {
-  //   if (address && iptAddress) {
-  //     searchUserInfoQuery({
-  //       fromAddr: address,
-  //       toAddr: iptAddress,
-  //       namespace: 'CyberConnect',
-  //       network: 'ETH'
-  //     }).then((res) => {
-  //       // console.log(res?.followStatus?.isFollowed, 'isFollowing');
-  //       setIsFollowing(res?.followStatus?.isFollowed)
-  //     })
-  //   }
-  // }, [address, iptAddress])
-
   const autoCompleteUser = (value: any) => {
     setIptAddress(value.nativeEvent.text);
+    if (followings?.length) {
+      followings.forEach((item) => {
+        if (item.address === value.nativeEvent.text) {
+          setIsFollowing(true);
+        } else {
+          setIsFollowing(false);
+        }
+      });
+    }
     // console.log(address)
     if (value.nativeEvent.text === address) {
       setIsSelf(true);
@@ -80,15 +63,6 @@ const AutoComplete: React.FC<{address: string}> = ({address}) => {
   };
 
   const handleFollow = () => {
-    // cyberconnect.then(CyberConnect => {
-    //   // console.log(new CyberConnect.default)
-    //   new CyberConnect({
-    //     provider: connector,
-    //     namespace: 'CyberConnect',
-    //     clientType: 'RN'
-    //   }).connect(address)
-    // })
-    // console.log(cyberNative);
     if (isFollowing) {
       cyberNative?.disconnect(iptAddress).then(() => {
         setIsFollowing(false)
