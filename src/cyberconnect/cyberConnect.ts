@@ -340,9 +340,7 @@ class CyberConnect {
       }
 
       this.idxInstance.set("cyberConnect", { outboundLink });
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
   }
 
   private async ceramicDisconnect(targetAddr: string) {
@@ -363,9 +361,7 @@ class CyberConnect {
       this.idxInstance.set("cyberConnect", {
         outboundLink: newOutboundLink,
       });
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
   }
 
   private async ceramicSetAlias(targetAddr: string, alias: string) {
@@ -392,20 +388,14 @@ class CyberConnect {
           "Couldn't find the target address in the given namespace"
         );
       }
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
   }
 
   async connect(targetAddr: string, alias: string = "") {
     try {
       this.address = await this.getAddress();
 
-      console.log("get address", this.address);
-
       await this.authWithSigningKey();
-
-      console.log("sign success!");
 
       const operation: Operation = {
         name: "follow",
