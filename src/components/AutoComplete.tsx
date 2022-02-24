@@ -15,7 +15,6 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
   const [iptAddress, setIptAddress] = useState<string>("");
   const [isSelf, setIsSelf] = useState<boolean>(false);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
-  const [cyberNative, setCyberNative] = useState<any>(null);
   const { cc } = useCC();
 
   useEffect(() => {
@@ -26,7 +25,6 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
         namespace: "CyberConnect",
         network: "ETH",
       }).then((res) => {
-        console.log(res?.followStatus?.isFollowing, "isFollowing");
         setIsFollowing(res?.followStatus?.isFollowing);
       });
     }
@@ -42,6 +40,8 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
   };
 
   const handleFollow = () => {
+    console.log(cc);
+
     if (isFollowing) {
       cc?.disconnect(iptAddress).then(() => {
         setIsFollowing(false);
