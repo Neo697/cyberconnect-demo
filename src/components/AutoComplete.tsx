@@ -26,8 +26,7 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
         namespace: "CyberConnect",
         network: "ETH",
       }).then((res) => {
-        console.log(res?.followStatus?.isFollowed, "isFollowing");
-        setIsFollowing(res?.followStatus?.isFollowed);
+        setIsFollowing(res?.followStatus?.isFollowing);
       });
     }
   }, [address, iptAddress]);
@@ -52,6 +51,8 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
   };
 
   const handleFollow = () => {
+    console.log(cc);
+
     if (isFollowing) {
       cc?.disconnect(iptAddress).then(() => {
         setIsFollowing(false);
