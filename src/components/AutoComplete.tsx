@@ -1,24 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { TextInput, StyleSheet, View, Text, Dimensions, Button } from 'react-native';
-import {
-  followListInfoQuery,
-  follow,
-  searchUserInfoQuery,
-} from "@/utils/query";
+import { searchUserInfoQuery, followListInfoQuery } from "@/utils/query";
 import {
   isValidAddr,
   formatAddress,
   // cyberconnect
 } from "@/utils/helpers";
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
-// @ts-ignore
-// import * as ECcrypto from 'react-native-ecc';
-import Buffer from "buffer";
-import { hexlify } from "@ethersproject/bytes";
-import { toUtf8Bytes } from "@ethersproject/strings";
-// import CyberConnect from '../cyberconnect';
 const cyberconnect = import("../cyberconnect");
-import { connect, disconnect } from "@/utils/connect";
 
 const AutoComplete: React.FC<{address: string}> = ({address}) => {
   const [focus, setFocus] = useState<boolean>(false);
@@ -26,39 +15,63 @@ const AutoComplete: React.FC<{address: string}> = ({address}) => {
   const [isSelf, setIsSelf] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
-  const [cyberNative, setCyberNative] = useState<any>(null)
+  const [cyberNative, setCyberNative] = useState<any>(null);
+  const [followings, setFollowings] = useState<any[]>([]);
 
   const connector = useWalletConnect();
+  console.log(followings, isFollowing);
 
   useEffect(() => {
+    followListInfoQuery({
+      address,
+      namespace: "CyberConnect",
+      network: "ETH",
+      followingFirst: 10,
+      followerFirst: 10,
+    }).then((res) => {
+      console.log(res);
+      setFollowings(res.followings.list);
+    });
     cyberconnect.then(res => {
       const CyberConnect = res.default
       const CyberRN = new CyberConnect({
         provider: connector,
         namespace: 'CyberConnect',
-        clientType: 'RN' as any
+        clientType: 'RN' as any,
       })
       setCyberNative(CyberRN);
     }) 
   }, [])
 
   useEffect(() => {
-    if (address && iptAddress) {
-      searchUserInfoQuery({
-        fromAddr: address,
-        toAddr: iptAddress,
-        namespace: 'CyberConnect',
-        network: 'ETH'
-      }).then((res) => {
-        console.log(res?.followStatus?.isFollowed, 'isFollowing');
-        setIsFollowing(res?.followStatus?.isFollowed)
+    if (followings?.length) {
+      followings.forEach((item) => {
+        if (item.address === iptAddress) {
+          setIsFollowing(true)
+        } else {
+          setIsFollowing(false)
+        }
       })
     }
-  }, [address, iptAddress])
+  }, [followings?.length]);
+
+  // useEffect(() => {
+  //   if (address && iptAddress) {
+  //     searchUserInfoQuery({
+  //       fromAddr: address,
+  //       toAddr: iptAddress,
+  //       namespace: 'CyberConnect',
+  //       network: 'ETH'
+  //     }).then((res) => {
+  //       // console.log(res?.followStatus?.isFollowed, 'isFollowing');
+  //       setIsFollowing(res?.followStatus?.isFollowed)
+  //     })
+  //   }
+  // }, [address, iptAddress])
 
   const autoCompleteUser = (value: any) => {
     setIptAddress(value.nativeEvent.text);
-    console.log(address)
+    // console.log(address)
     if (value.nativeEvent.text === address) {
       setIsSelf(true);
     } else {
@@ -75,7 +88,7 @@ const AutoComplete: React.FC<{address: string}> = ({address}) => {
     //     clientType: 'RN'
     //   }).connect(address)
     // })
-    console.log(cyberNative);
+    // console.log(cyberNative);
     if (isFollowing) {
       cyberNative?.disconnect(iptAddress).then(() => {
         setIsFollowing(false)

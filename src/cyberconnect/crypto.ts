@@ -1,4 +1,4 @@
-// import { TextDecoder } from "text-encoding";
+import { TextEncoder } from "text-encoding";
 import { set, get, clear } from "./DB";
 
 export async function clearSigningKey() {

@@ -27,7 +27,9 @@ const Follow: React.FC<any> = ({route, navigation}) => {
   const showAnimated = useRef(new Animated.Value(0)).current;
   const [visible, setVisible] = useState<boolean>(false);
   const [followers, setFollowers] = useState<any[]>([]);
+  const [followersNum, setFollowersNum] = useState<number>(0);
   const [followings, setFollowings] = useState<any[]>([]);
+  const [followingsNum, setFollowingsNum] = useState<number>(0);
   const [flag, setFlag] = useState<boolean>(false);
   useEffect(() => {
     if (visible) {
@@ -39,6 +41,8 @@ const Follow: React.FC<any> = ({route, navigation}) => {
         followerFirst: 10,
       }).then((res) => {
         console.log(res)
+        setFollowersNum(res.followerCount)
+        setFollowingsNum(res.followingCount);
         setFollowers(res.followers.list)
         setFollowings(res.followings.list)
       })
@@ -73,16 +77,17 @@ const Follow: React.FC<any> = ({route, navigation}) => {
 
   return (
     <>
-      <SafeAreaView style={{flex: 0, backgroundColor: '#fff'}} />
+      <SafeAreaView style={{ flex: 0, backgroundColor: "#fff" }} />
       <SafeAreaView style={styles.followPage}>
         <ScrollView
           style={styles.followContent}
           showsHorizontalScrollIndicator={false}
-          scrollEnabled={!visible}>
-          <View style={{height: Dimensions.get('window').height * 0.91}}>
+          scrollEnabled={!visible}
+        >
+          <View style={{ height: Dimensions.get("window").height * 0.91 }}>
             <View style={styles.searchContent}>
               <View>
-                <MyText title={'Follow'} />
+                <MyText title={"Follow"} />
               </View>
               <AutoComplete address={address} />
             </View>
@@ -90,7 +95,7 @@ const Follow: React.FC<any> = ({route, navigation}) => {
               style={{
                 ...styles.modal,
                 opacity: showAnimated,
-                display: visible ? 'flex' : 'none',
+                display: visible ? "flex" : "none",
               }}
               onTouchEnd={onClose}
             />
@@ -99,40 +104,46 @@ const Follow: React.FC<any> = ({route, navigation}) => {
                 <AvatarGroup
                   size={50}
                   name={formatAddress(address)}
-                  nameStyle={{fontSize: 20, fontWeight: '800'}}
+                  nameStyle={{ fontSize: 20, fontWeight: "800" }}
                   navigation={navigation}
                 />
                 <View
                   style={{
                     width: 40,
                     height: 40,
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
-                  onTouchEnd={onShow}>
+                  onTouchEnd={onShow}
+                >
                   <SvgXml xml={arrowDown} />
                 </View>
               </View>
               <View
                 style={{
                   ...styles.navData,
-                  height: visible ? Dimensions.get('window').height * 0.65 : 0,
-                }}>
+                  height: visible ? Dimensions.get("window").height * 0.65 : 0,
+                }}
+              >
                 <View style={styles.allNumber}>
                   <View
                     style={styles.followers}
-                    onTouchEnd={() => setFlag(false)}>
-                    <Text style={styles.number}>120K</Text>
+                    onTouchEnd={() => setFlag(false)}
+                  >
+                    <Text style={styles.number}>{followersNum}</Text>
                     <Text style={styles.label}>Followers</Text>
                   </View>
                   <View
                     style={styles.following}
-                    onTouchEnd={() => setFlag(true)}>
-                    <Text style={styles.number}>{'8,900'}</Text>
+                    onTouchEnd={() => setFlag(true)}
+                  >
+                    <Text style={styles.number}>{followingsNum}</Text>
                     <Text style={styles.label}>Following</Text>
                   </View>
                 </View>
-                <View style={{...styles.slideBorder, height: visible ? 4 : 0}}>
+                <View
+                  style={{ ...styles.slideBorder, height: visible ? 4 : 0 }}
+                >
                   <View
                     style={{
                       ...styles.slideWhite,
@@ -142,23 +153,25 @@ const Follow: React.FC<any> = ({route, navigation}) => {
                   />
                 </View>
                 <ScrollView
-                  style={{...styles.list, display: !flag ? 'flex' : 'none'}}>
-                  <Text style={{color: '#fff'}}>followers</Text>
+                  style={{ ...styles.list, display: !flag ? "flex" : "none" }}
+                >
+                  <Text style={{ color: "#fff" }}>followers</Text>
                   {followers?.length
-                    ? followers.map(user => (
+                    ? followers.map((user) => (
                         <View style={styles.avatarGroup}>
                           <AvatarGroup
                             size={35}
                             name={user.ens || formatAddress(user.address)}
-                            nameStyle={{fontSize: 13, fontWeight: '500'}}
+                            nameStyle={{ fontSize: 13, fontWeight: "500" }}
                           />
                         </View>
                       ))
                     : null}
                 </ScrollView>
                 <ScrollView
-                  style={{...styles.list, display: flag ? 'flex' : 'none'}}>
-                  <Text style={{color: '#fff'}}>following</Text>
+                  style={{ ...styles.list, display: flag ? "flex" : "none" }}
+                >
+                  <Text style={{ color: "#fff" }}>following</Text>
                   {followings?.length
                     ? followings.map((user, i) => (
                         <View style={styles.avatarGroup} key={i}>
@@ -166,7 +179,7 @@ const Follow: React.FC<any> = ({route, navigation}) => {
                             size={35}
                             name={user.ens}
                             address={user.address}
-                            nameStyle={{fontSize: 13, fontWeight: '500'}}
+                            nameStyle={{ fontSize: 13, fontWeight: "500" }}
                           />
                         </View>
                       ))

@@ -1,8 +1,6 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
-import {
-  useWalletConnect,
-} from '@walletconnect/react-native-dapp';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { useWalletConnect } from '@walletconnect/react-native-dapp';
 
 const WalletButton: React.FC<any> = ({ navigation }) => {
 
