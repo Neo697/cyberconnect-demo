@@ -1,11 +1,4 @@
 // @ts-ignore
-import crypto from "react-native-ecc";
-import Buffer from "buffer";
-// import * as TextEncoder from 'text-encoding'
-import { useWalletConnect } from "@walletconnect/react-native-dapp";
-import { hexlify } from "@ethersproject/bytes";
-import { toUtf8Bytes } from "@ethersproject/strings";
-
 const globalSign: any = {};
 
 export const formatAddress = (address: string) => {

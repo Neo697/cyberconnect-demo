@@ -44,7 +44,6 @@ const AutoComplete: React.FC<{ address: string }> = ({ address }) => {
   };
 
   const handleFollow = () => {
-    console.log(cyberNative);
     if (isFollowing) {
       cc?.disconnect(iptAddress).then(() => {
         setIsFollowing(false);
